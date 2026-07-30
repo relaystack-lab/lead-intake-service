@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}События заявки — Lead Intake Service{% endblock %}
+{% block content %}
+  <h1>События заявки #{{ lead_id }}</h1>
+  <p class="back-navigation"><a class="back-link" href="/admin/leads"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/><path d="M8 12h11"/></svg><span>К заявкам</span></a></p>
+  <div class="table-wrap"><table class="data-table events-table">
+    <thead><tr><th>Время</th><th>Тип</th><th>Данные</th></tr></thead>
+    <tbody>{% for event in events %}<tr><td data-label="Время">{{ event.created_at }}</td><td data-label="Тип">{{ event.type }}</td><td data-label="Данные"><pre>{{ event.payload | tojson }}</pre></td></tr>{% else %}<tr><td class="empty-state" colspan="3">Событий нет.</td></tr>{% endfor %}</tbody>
+  </table></div>
+{% endblock %}

@@ -1,0 +1,1 @@
+"""Пакет Lead Intake Service."""

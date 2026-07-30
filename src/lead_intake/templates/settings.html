@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Уведомления — Lead Intake Service{% endblock %}
+{% block content %}
+  <h1>Уведомления</h1>
+  <div class="settings-grid">
+    <section class="settings-card" data-channel-type="telegram">
+      <h2>Telegram</h2>
+      <p id="telegram-verification" class="verification verification-{{ telegram.verification.status }}" role="status">{{ telegram.verification.message }}</p>
+      <form class="channel-toggle-form" hx-post="/admin/settings/telegram/enabled" hx-trigger="change from:[data-channel-toggle]" hx-target="#telegram-result" hx-swap="innerHTML">
+        <input type="hidden" name="enabled" value="">
+        <label class="toggle-field {% if not telegram.verification.can_enable %}toggle-field-disabled{% endif %}"><input class="toggle-input" data-channel-toggle type="checkbox" name="enabled" value="on" {% if telegram.enabled %}checked{% endif %} {% if not telegram.verification.can_enable %}disabled{% endif %}><span class="toggle-control" aria-hidden="true"></span><span>Включить канал</span></label>
+      </form>
+      <form class="settings-form" hx-post="/admin/settings/telegram" hx-target="#telegram-result" hx-swap="innerHTML">
+        <div class="settings-fields">
+          <label class="field">Токен бота<input data-verification-field type="password" name="bot_token" value="" placeholder="{{ telegram.config.bot_token or 'Не задан' }}" autocomplete="new-password"></label>
+          <label class="field">ID чатов (через запятую)<textarea name="chat_ids" rows="3">{{ telegram.config.chat_ids | join(', ') }}</textarea></label>
+          <label class="field">Проверочные Chat ID (через запятую)<textarea name="test_chat_ids" rows="3">{{ telegram.config.test_chat_ids | join(', ') }}</textarea></label>
+        </div>
+        <div class="form-actions">
+          <button class="button button-primary button-icon" type="submit" aria-label="Сохранить настройки Telegram" title="Сохранить настройки Telegram"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 3h12l3 3v15H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
+          <button class="button button-secondary button-with-icon" type="button" hx-post="/admin/settings/telegram/test" hx-include="closest form" hx-target="#telegram-result" hx-swap="innerHTML"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m3 11 18-8-6 18-4-7z"/><path d="m11 14 4-4"/></svg><span>Проверить отправку</span></button>
+        </div>
+      </form>
+      <div id="telegram-result"></div>
+    </section>
+    <section class="settings-card" data-channel-type="email">
+      <h2>Email</h2>
+      <p id="email-verification" class="verification verification-{{ email.verification.status }}" role="status">{{ email.verification.message }}</p>
+      <form class="channel-toggle-form" hx-post="/admin/settings/email/enabled" hx-trigger="change from:[data-channel-toggle]" hx-target="#email-result" hx-swap="innerHTML">
+        <input type="hidden" name="enabled" value="">
+        <label class="toggle-field {% if not email.verification.can_enable %}toggle-field-disabled{% endif %}"><input class="toggle-input" data-channel-toggle type="checkbox" name="enabled" value="on" {% if email.enabled %}checked{% endif %} {% if not email.verification.can_enable %}disabled{% endif %}><span class="toggle-control" aria-hidden="true"></span><span>Включить канал</span></label>
+      </form>
+      <form class="settings-form" hx-post="/admin/settings/email" hx-target="#email-result" hx-swap="innerHTML">
+        <div class="settings-fields">
+          <div class="field-grid">
+            <label class="field">SMTP-хост<input data-verification-field name="smtp_host" value="{{ email.config.smtp_host or '' }}"></label>
+            <label class="field">SMTP-порт<input data-verification-field name="smtp_port" type="number" min="1" value="{{ email.config.smtp_port or '' }}"></label>
+            <label class="field">Режим TLS<select data-verification-field name="tls_mode"><option value="ssl" {% if email.config.tls_mode == 'ssl' %}selected{% endif %}>SSL</option><option value="starttls" {% if email.config.tls_mode == 'starttls' %}selected{% endif %}>STARTTLS</option></select></label>
+            <label class="field">Пользователь SMTP<input data-verification-field name="smtp_user" value="{{ email.config.smtp_user or '' }}"></label>
+          </div>
+          <label class="field">Пароль SMTP<input data-verification-field type="password" name="smtp_password" value="" placeholder="{{ email.config.smtp_password or 'Не задан' }}" autocomplete="new-password"></label>
+          <label class="field">Адрес отправителя<input data-verification-field type="email" name="from_address" value="{{ email.config.from_address or '' }}"></label>
+          <label class="field">Получатели (через запятую)<textarea name="recipients" rows="3">{{ email.config.recipients | join(', ') }}</textarea></label>
+          <label class="field">Проверочные адреса email (через запятую)<textarea name="test_recipients" rows="3">{{ email.config.test_recipients | join(', ') }}</textarea></label>
+          <label class="field">Тема<input name="subject_template" value="{{ email.config.subject_template or 'Новая заявка #{id}' }}"></label>
+        </div>
+        <div class="form-actions">
+          <button class="button button-primary button-icon" type="submit" aria-label="Сохранить настройки Email" title="Сохранить настройки Email"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 3h12l3 3v15H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
+          <button class="button button-secondary button-with-icon" type="button" hx-post="/admin/settings/email/test" hx-include="closest form" hx-target="#email-result" hx-swap="innerHTML"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m3 11 18-8-6 18-4-7z"/><path d="m11 14 4-4"/></svg><span>Проверить отправку</span></button>
+        </div>
+      </form>
+      <div id="email-result"></div>
+    </section>
+  </div>
+{% endblock %}

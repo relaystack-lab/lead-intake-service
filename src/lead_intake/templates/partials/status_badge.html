@@ -1,0 +1,1 @@
+<span id="lead-{{ lead.id }}-status" class="status status-{{ lead.status.value }}">{{ {"new": "Новая", "in_progress": "В работе", "done": "Завершена"}.get(lead.status.value, lead.status.value) }}</span>

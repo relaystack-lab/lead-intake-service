@@ -1,0 +1,27 @@
+@baseUrl = http://localhost:8000
+@apiKey = replace_with_your_api_key
+
+### Проверка состояния
+GET {{baseUrl}}/health
+
+### Создать заявку
+POST {{baseUrl}}/api/v1/leads
+Content-Type: application/json
+X-API-Key: {{apiKey}}
+
+{
+  "name": "Анна",
+  "contact": "+79990000000",
+  "comment": "Нужна консультация",
+  "source": "website"
+}
+
+### Получить заявки
+GET {{baseUrl}}/api/v1/leads?source=website&page=1&page_size=20
+X-API-Key: {{apiKey}}
+
+### Принять заявку из Tilda
+POST {{baseUrl}}/api/v1/leads/tilda?api_key={{apiKey}}
+Content-Type: application/x-www-form-urlencoded
+
+Name=Иван&Phone=%2B79990000001&Comments=Перезвоните

@@ -1,0 +1,31 @@
+name: lead-intake
+
+services:
+  volume-init:
+    build: .
+    user: "0:0"
+    command: ["sh", "-c", "mkdir -p /data /logs && chown -R 10001:10001 /data /logs"]
+    volumes:
+      - lead_intake_data:/data
+      - ./output/logs:/logs
+    restart: "no"
+
+  app:
+    build: .
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: sqlite:////data/lead_intake.db
+      LOG_DIRECTORY: /logs
+    depends_on:
+      volume-init:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+    volumes:
+      - lead_intake_data:/data
+      - ./output/logs:/logs
+    restart: unless-stopped
+
+volumes:
+  lead_intake_data:
