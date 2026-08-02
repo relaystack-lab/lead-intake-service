@@ -1,4 +1,5 @@
 # Lead Intake Service
+[![CI](https://github.com/relaystack-lab/lead-intake-service/actions/workflows/ci.yml/badge.svg)](https://github.com/relaystack-lab/lead-intake-service/actions/workflows/ci.yml)
 
 Lead Intake Service принимает заявки из сайта и форм, хранит их в SQLite, отправляет уведомления и предоставляет защищённую админку для работы с заявками малого бизнеса.
 
