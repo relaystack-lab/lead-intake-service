@@ -150,6 +150,25 @@ uvicorn lead_intake.main:app --host 127.0.0.1 --port 8000 --no-access-log
 
 Сгенерируйте ключ один раз до настройки каналов и сохраните его в защищённом хранилище. Замена или потеря ключа делает ранее сохранённые Telegram- и SMTP-секреты нечитаемыми. Uvicorn access log отключён, чтобы query-параметр `api_key` адаптера Tilda не попадал в системный вывод контейнера; безопасные JSONL-логи приложения продолжают записываться в `output/logs/`.
 
+## Deploy в Coolify
+
+Для production на Coolify используется отдельный файл `compose.coolify.yaml`.
+
+Он отличается от локального `compose.yaml`:
+
+- не публикует порт `8000` на хост;
+- хранит SQLite-данные и JSONL-логи в persistent Docker volumes;
+- запускает `volume-init`, который назначает права для пользователя приложения;
+- получает секреты из Environment Variables Coolify, а не из `.env` в Git.
+
+### Настройки приложения
+
+- Build Pack: `Docker Compose`
+- Compose file: `compose.coolify.yaml`
+- Service: `app`
+- Internal port: `8000`
+- Domain: `https://<application-subdomain>.<your-domain>`
+
 ## Документация API
 
 `/docs` — интерактивная документация внешнего API, сформированная из OpenAPI. В ней доступны операции для интеграций: проверка состояния, приём и получение заявок, а также адаптер Tilda.
